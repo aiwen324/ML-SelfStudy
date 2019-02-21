@@ -65,7 +65,7 @@ def transform_word_to_idx(insts, word_to_idx):
             try:
                 l.append(word_to_idx[w])
             except KeyError:
-                l.append(Constants.UNK_WORD)
+                l.append(Constants.UNK)
         idx_insts.append(l)
     return idx_insts
     
@@ -94,6 +94,8 @@ def main():
 
 
     opt = parser.parse_args()
+    opt.max_token_seq_len = opt.max_word_seq_len + 2 # include the <s> and </s>
+
  #    src_word_insts = load_insts_from_files(opt.source_data, opt.max_sent_len)
  #    src_filtered_vocabs = filtered_vocabs(src_word_insts)
  #    src_word_to_idx =generate_word_idx(src_filtered_vocabs)

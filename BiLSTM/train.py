@@ -9,6 +9,7 @@ import torch.optim as optim
 import torch.utils.data
 import Constants
 from dataset import TranslationDataset, paired_collate_fn
+from model import Transformer
 
 
 def cal_performance(pred, gold, smoothing=False):
@@ -50,7 +51,9 @@ def train_epoch(model, training_data, optimizer, device):
 
         # forward
         optimizer.zero_grad()
-        pred = model(src_seq, tgt_seq)
+        src_max_len = src_seq.shape[1]
+        tgt_max_len = tgt_seq.shape[1]
+        pred = model(src_seq, src_max_len, tgt_max_len)
 
         # backword
         loss, n_correct = cal_performance(pred, gold)
@@ -88,11 +91,12 @@ def eval_epoch(model, validation_data, device):
                 desc='  - (Validation) ', leave=False):
 
             # prepare data
-            src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(device), batch)
+            src_seq, tgt_seq = map(lambda x: x.to(device), batch)
             gold = tgt_seq[:, 1:]
 
             # forward
-            pred = model(src_seq, src_pos, tgt_seq, tgt_pos)
+            src_max_len, tgt_max_len = src_seq.shape[1], tgt_seq.shape[1]
+            pred = model(src_seq, src_max_len, tgt_max_len)
             loss, n_correct = cal_performance(pred, gold, smoothing=False)
 
             # note keeping
@@ -182,7 +186,8 @@ def main():
 
     # Load data
     data = torch.load(opt.data)
-    opt.max_token_seq_len = data['settings'].max_token_seq_len
+
+    opt.max_token_seq_len = data['settings'].max_word_seq_len + 2
 
     training_data, validation_data = prepare_dataloaders(data, opt)
     
@@ -199,9 +204,13 @@ def main():
         d_h=opt.d_model,
         d_s=opt.d_model,
         src_vocab_size=opt.src_vocab_size,
-        tgt_vocab_size=opt.tgt_vocab_size)
+        tgt_vocab_size=opt.tgt_vocab_size,
+        max_sent_len=opt.max_token_seq_len)
 
     optimizer = optim.Adam(filter(lambda x: x.requires_grad, transformer.parameters()),
         betas=(0.9, 0.98), eps=1e-09)
 
     train(transformer, training_data, validation_data, optimizer, device, opt)
+
+if __name__ == '__main__':
+    main()

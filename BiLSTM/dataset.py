@@ -31,7 +31,7 @@ class TranslationDataset(torch.utils.data.Dataset):
 		self._src_idx2word = src_idx2word
 		self._src_insts = src_insts
 
-		tgt_idx2word = {idx: word for word, idx in tgt_word2idx}
+		tgt_idx2word = {idx: word for word, idx in tgt_word2idx.items()}
 		self._tgt_word2idx = tgt_word2idx
 		self._tgt_idx2word = tgt_idx2word
 		self._tgt_insts = tgt_insts
