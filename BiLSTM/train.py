@@ -13,9 +13,10 @@ from model import Transformer
 
 
 def cal_performance(pred, gold, smoothing=False):
+    pred = pred.contiguous().view(-1, pred.shape[2])
     loss = cal_loss(pred, gold, smoothing)
-
     pred = pred.max(1)[1]
+    # print(pred)
     gold = gold.contiguous().view(-1)
     non_pad_mask = gold.ne(Constants.PAD)
     n_correct = pred.eq(gold)
@@ -24,8 +25,11 @@ def cal_performance(pred, gold, smoothing=False):
     return loss, n_correct
 
 def cal_loss(pred, gold, smoothing):
+    # print(gold.shape)
     gold = gold.contiguous().view(-1)
-
+    print(gold.shape)
+    print(pred.shape)
+    # print(gold)
     loss = F.cross_entropy(pred, gold, ignore_index=Constants.PAD, reduction='sum')
 
     return loss
@@ -55,9 +59,9 @@ def train_epoch(model, training_data, optimizer, device):
         tgt_max_len = tgt_seq.shape[1]
         pred = model(src_seq, src_max_len, tgt_max_len)
 
-        # backword
+        # backward
         loss, n_correct = cal_performance(pred, gold)
-        loss.backword()
+        loss.backward()
 
         # update parameters
         optimizer.step()

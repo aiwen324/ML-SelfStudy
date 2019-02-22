@@ -96,10 +96,12 @@ class Decoder(nn.Module):
             attention = attention.view(-1, 1, src_max_sent_len)
             c_i = torch.bmm(attention, hidden_matrix)
             # print(c_i.shape)
-            output_i, s_prev = self.decoder_rnn(s_prev, y_prev, c_i)
-            y_prev = output_i.max(1)[1]
             # print(s_prev.shape)
-            print(output.shape, output_i.shape)
+            output_i, s_prev = self.decoder_rnn(s_prev, y_prev, c_i)
+            y_prev = output_i.max(2)[1]
+            # print(y_prev.shape)
+            # print(s_prev.shape)
+            # print(output.shape, output_i.shape)
             output[:,i,:] = output_i.view(output_i.shape[0], output_i.shape[2])
         return output
 
@@ -182,5 +184,5 @@ class Transformer(nn.Module):
     def forward(self, x, src_max_sent_len, tgt_max_sent_len):
         # print(x)
         encoder_output = self.encoderLayer(x)
-        output = self.decoderLayer(encoder_output, src_max_sent_len, tgt_max_sent_len)
+        output = self.decoderLayer(encoder_output, src_max_sent_len, tgt_max_sent_len-1)
         return output
