@@ -182,7 +182,7 @@ def main():
     parser.add_argument('-epoch', type=int, default=10)
     parser.add_argument('-batch_size', type=int, default=64)
     parser.add_argument('-d_model', type=int, default=512)
-    parser.add_argument('no_cuda', action='store_true')
+    parser.add_argument('-no_cuda', action='store_true')
 
     opt = parser.parse_args()
     opt.cuda = not opt.no_cuda
@@ -199,7 +199,7 @@ def main():
     opt.tgt_vocab_size = training_data.dataset.tgt_vocab_size
 
     print(opt)
-
+    # opt.cuda = True
     device = torch.device('cuda' if opt.cuda else 'cpu')
 
     # TODO: Fill the code
@@ -209,7 +209,7 @@ def main():
         d_s=opt.d_model,
         src_vocab_size=opt.src_vocab_size,
         tgt_vocab_size=opt.tgt_vocab_size,
-        max_sent_len=opt.max_token_seq_len)
+        max_sent_len=opt.max_token_seq_len).to(device)
 
     optimizer = optim.Adam(filter(lambda x: x.requires_grad, transformer.parameters()),
         betas=(0.9, 0.98), eps=1e-09)
