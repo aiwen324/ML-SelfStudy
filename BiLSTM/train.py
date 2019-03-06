@@ -27,8 +27,8 @@ def cal_performance(pred, gold, smoothing=False):
 def cal_loss(pred, gold, smoothing):
     # print(gold.shape)
     gold = gold.contiguous().view(-1)
-    print(gold.shape)
-    print(pred.shape)
+    # print(gold.shape)
+    # print(pred.shape)
     # print(gold)
     loss = F.cross_entropy(pred, gold, ignore_index=Constants.PAD, reduction='sum')
 
@@ -47,7 +47,7 @@ def train_epoch(model, training_data, optimizer, device):
 
     for batch in tqdm(
         training_data, mininterval=2,
-        desc='  -  (Training)   ', leave=False):
+        desc='  -  (Training)   ', leave=False, ascii=True):
 
         # prepare data
         src_seq, tgt_seq = map(lambda x: x.to(device), batch)
@@ -58,6 +58,8 @@ def train_epoch(model, training_data, optimizer, device):
         src_max_len = src_seq.shape[1]
         tgt_max_len = tgt_seq.shape[1]
         pred = model(src_seq, src_max_len, tgt_max_len)
+        # print('## debug msg: checking gold shape and pred shape')
+        # print(gold.shape, pred.shape)
 
         # backward
         loss, n_correct = cal_performance(pred, gold)
@@ -92,7 +94,7 @@ def eval_epoch(model, validation_data, device):
     with torch.no_grad():
         for batch in tqdm(
                 validation_data, mininterval=2,
-                desc='  - (Validation) ', leave=False):
+                desc='  - (Validation) ', leave=False, ascii=True):
 
             # prepare data
             src_seq, tgt_seq = map(lambda x: x.to(device), batch)
