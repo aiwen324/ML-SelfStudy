@@ -18,18 +18,16 @@ class Encoder(nn.Module):
 
     def forward(self, x):
         # Initialize h_0 for both direction
-        h_prev_1 = torch.zeros(x.shape[0], self.d_h)
-        h_prev_2 = torch.zeros(x.shape[0], self.d_h)
+        h_prev_1 = torch.zeros(x.shape[0], self.d_h, device='cuda')
+        h_prev_2 = torch.zeros(x.shape[0], self.d_h, device='cuda')
         embedded_x = self.word_embed_layer(x)
-        # (barch_size x max_sequence_len x d_embed)
+        # We need to change reshape the tensor for training purpose
+        # (batch_size x max_sequence_len x d_embed) --> (max_sequence_len x batch_size x d_embed)
         embedded_x = embedded_x.permute(1, 0, 2)
-        # print(embedded_x.shape)
-        # TODO: fix the h_left dimension with input dimension
-        #       Including: batch_size, max_sent_len
-        #                  Also, fix the shape so that
-        #                  the model forward the tensor correctly
-        h_left = torch.zeros(x.shape[0], embedded_x.shape[0], self.d_h)
-        h_right = torch.zeros(x.shape[0], embedded_x.shape[0], self.d_h)
+        # h_left shape: batch_size x max_sequence_len x d_h
+        h_left = torch.zeros(x.shape[0], embedded_x.shape[0], self.d_h, device='cuda')
+        print("## debug msg: h_left shape is", h_left.shape)
+        h_right = torch.zeros(x.shape[0], embedded_x.shape[0], self.d_h, device='cuda')
         # TODO: fix the memory issue
         counter = 0
         for i in embedded_x:
@@ -43,6 +41,7 @@ class Encoder(nn.Module):
             counter += 1
         # print(h_left.shape, h_right.shape)
         output = torch.cat((h_left, h_right), dim=2)
+        print("## debug msg: output shape is", output.shape)
         return output
 
 
@@ -85,9 +84,9 @@ class Decoder(nn.Module):
         self.tgt_vocab_size=tgt_vocab_size
     def forward(self, hidden_matrix, src_max_sent_len, tgt_max_sent_len):
         # print(len(hidden_matrix))
-        s_prev = torch.zeros(hidden_matrix.shape[0], 1, self.d_s)
-        y_prev = torch.zeros(hidden_matrix.shape[0], 1, dtype=torch.long)
-        output = torch.zeros(hidden_matrix.shape[0], tgt_max_sent_len, self.tgt_vocab_size)
+        s_prev = torch.zeros(hidden_matrix.shape[0], 1, self.d_s, device='cuda')
+        y_prev = torch.zeros(hidden_matrix.shape[0], 1, dtype=torch.long, device='cuda')
+        output = torch.zeros(hidden_matrix.shape[0], tgt_max_sent_len, self.tgt_vocab_size, device='cuda')
         for i in range(tgt_max_sent_len):
             # Shape of s_prev = batch_size x d_s
             # Shape of s_prev after transformation = batch_size x src_max_sent_len x d_s
