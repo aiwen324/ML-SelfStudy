@@ -173,7 +173,7 @@ $$
 v_{-1} &= x_1 \\
 v_0 &= x_2 \\
 v_1 &= \ln v_{-1} \\
-v_2 &= v_{-1} \times v_0 \qquad \Rightarrow \bar{v}_0 = \bar{v}_0 + \bar{v}_2v_{-1}\\
+v_2 &= v_{-1} \times v_0 \qquad \Rightarrow \bar{v}_0 = \bar{v}_0 + \bar{v}_ 2v_ {-1}\\
 v_3 &= \sin v_0 \qquad \Rightarrow \bar{v}_0 = \bar{v}_0 + \bar{v}_3\cos v_0\\
 v_4 &= v_1 + v_2 \\
 v_5 &= v_4 - v_3
