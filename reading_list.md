@@ -74,7 +74,6 @@ For forward mode, they introdcue another interesting idea called *dual number*. 
 
 $$
 \begin{align*}
-s =
 \begin{bmatrix}
 a & b \\
 0 & a
@@ -83,7 +82,7 @@ a & b \\
 a & b \\
 0 & a
 \end{bmatrix}
-= 
+&= 
 \begin{bmatrix}
 a^2 & ab + ba \\
 0 & a^2
