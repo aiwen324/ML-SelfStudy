@@ -74,6 +74,7 @@ For forward mode, they introdcue another interesting idea called *dual number*. 
 
 $$
 \begin{align*}
+
 \begin{bmatrix}
 a & b \\
 0 & a
