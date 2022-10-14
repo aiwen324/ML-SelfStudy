@@ -24,6 +24,7 @@ Now, considering g with following assumptions:
 - $\partial_y^2g(x,y) > 0$ at $y = h(x)$.
 
 Then it is not hard to get by definition $\partial_2 g(x, h(x)) = 0$ where $\partial_2$ is the derivative with respect to the second argument. Therefore we would have $\frac{\partial[\partial_2 g(x, h(x))]}{\partial x} = 0$. Which if you just expand it by definition, you would get:
+
 $$
 \partial_1 \partial_2 g(x, h(x)) + h'(x)\partial_2^2 g(x, h(x)) = 0
 $$
@@ -38,9 +39,11 @@ Then, with our assumption that $\partial_y^2g(x,y) > 0$ at $y = h(x)$. We can si
 **IMPORTANT: AD IS NOT SYMBOLIC DIFFERENTIATION**
 
 Consider the following example, we define
+
 $$
 l_{n+1} = 4l_n(1-l_n),\; l_1 = x
 $$
+
 Consider $\frac{dl_n}{dx}$. It will be much easy to calculate the derivative recursively. i.e. $\frac{dl_{n+1}}{dx} = \frac{dl_{n+1}}{dl_n}\frac{dl_n}{dl_{n-1}}\cdots\frac{dl_1}{dx}$.
 
 This paper mentioned a representation of computation called ***evaluation trace*** of elementary operaions which forms the basis of the AD techniques. By using this, AD can be applied to regular code with minimal change, allowing branching, loops, and recursion.
@@ -52,6 +55,7 @@ AD has two mode: **Forward Mode** and **Reverse Mode**.
 Forward mode is really just trying to calculate the partial derivative for one variable at once. Consider the function $f: R^n -> R^m$. It can be treated as calculate a column of Jacobian matrix $\frac{\partial y}{\partial x_i}$ (which is a $mx1$ vector)
 
 Consider this example:
+
 $$
 \begin{align*}
 v_{-1} &= x_1 \\
@@ -62,7 +66,8 @@ v_3 &= \sin v_0 \\
 v_4 &= v_1 + v_2 \\
 v_5 &= v_4 - v_3
 \end{align*}
-$$ 
+$$
+
 Basically it is calculating $\dot{v}_i = \frac{\partial v_i}{\partial x_i}$. For example: $\dot{v}_2 = v_0\dot{v}_{-1} + v_{-1}\dot{v}_0$
 
 For forward mode, they introdcue another interesting idea called *dual number*. **(Actually you could ignore this extra definition, it's not useful, it's just trying to map the algorithm implemented in the program to a math formula)**. Consider the expression $a + b\epsilon$ where $a, b\in R$, and $\epsilon$ is a symol such that $\epsilon^2 = 0, \epsilon\neq 0$. We call $\epsilon$ dual number. We can represent (map) this in a matrix space, consider the following:
@@ -117,6 +122,7 @@ $$
 where $a^2 + nv = 0$ except when $a=b=c=0$ (because this case $\epsilon = 0$ would conflict with our assumption).
 
 Now consider the differentiation case. First let's consider a polynomial, with $P(x) = p_0 + p_1x + p_2x^2 + \cdots + p_nx^n$. Then we have
+
 $$
 \begin{align*}
 P(a + b\epsilon) 
@@ -127,12 +133,15 @@ P(a + b\epsilon)
 $$
 
 Now, this means we can extend any **analytic** real function to the dual numbers by looking at its Taylor series. Recall:
+
 $$
 \begin{align*}
 f(a + x) = f(a) + f'(a)x + \frac{f^{(2)}(a)x^2}{2!} + \cdots + \frac{f^{(n)}(a)x^n}{n!} + \cdots
 \end{align*}
 $$
+
 Then by letting $x = b\epsilon$, we get:
+
 $$
 \begin{align*}
 f(a + b\epsilon) 
@@ -140,6 +149,7 @@ f(a + b\epsilon)
 &= f(a) + f'(a)b\epsilon
 \end{align*}
 $$
+
 In another sense, if we have $a + b\epsilon$ as $v + \dot{v}\epsilon$. Then we have $f(v + \dot{v}\epsilon) = f(v) + f'(v)\dot{v}\epsilon$. Therefore, we could use dual numbers as data strucutres for carrying the tangent value together with the primal. (Maybe just like a tuple same as complex nubmer). The chain rule should work as expected as you can check.
 
 $$
@@ -149,6 +159,7 @@ f(g(v + \dot{v}\epsilon))
 &= f(g(v)) + f'(g(v))g'(v)\dot{v}\epsilon
 \end{align*}
 $$
+
 The coefficient of $\epsilon$ on the right-hand side is exactly the derivative of the composition of $f$ and $g$.
 
 **Reverse Mode:**
