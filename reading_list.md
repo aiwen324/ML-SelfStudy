@@ -68,7 +68,7 @@ v_5 &= v_4 - v_3
 \end{align*}
 $$
 
-Basically it is calculating $\dot{v}_i = \frac{\partial v_i}{\partial x_i}$. For example: $\dot{v}_2 = v_0\dot{v}_{-1} + v_{-1}\dot{v}_0$
+Basically it is calculating $\dot{v} _i = \frac{\partial v_i}{\partial x_i}$. For example: $\dot{v} _2 = v_0\dot{v} _{-1} + v_{-1}\dot{v} _0$
 
 For forward mode, they introdcue another interesting idea called *dual number*. **(Actually you could ignore this extra definition, it's not useful, it's just trying to map the algorithm implemented in the program to a math formula)**. Consider the expression $a + b\epsilon$ where $a, b\in R$, and $\epsilon$ is a symol such that $\epsilon^2 = 0, \epsilon\neq 0$. We call $\epsilon$ dual number. We can represent (map) this in a matrix space, consider the following:
 
