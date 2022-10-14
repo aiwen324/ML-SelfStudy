@@ -17,7 +17,7 @@ This paper gives several assumptions, but according to its code, how it calculat
 
 Check this answer for how to calculate the derivative of argmin in this link: https://math.stackexchange.com/questions/2261172/interchange-derivative-and-argmin
 
-The answer in the link mentioned calculating the derivative is ***not*** simply just a exchange. i.e. $g(x, y) = y^2, h(x) = \argmin_{y\in R^+} g(x, y) = \argmin_{y\in R^+} y^2$. Notice this does nothing with variable $x$ thus $\partial_x h=0$. Whereas if you simply exchange $argmin_{y\in R^+}$ and $\partial$, it will become $argmin_{y\in R^+} 0$ which the result is the whole $R^+$. 
+The answer in the link mentioned calculating the derivative is ***not*** simply just a exchange. i.e. $g(x, y) = y^2, h(x) = \arg\min_{y\in R^+} g(x, y) = \arg\min_{y\in R^+} y^2$. Notice this does nothing with variable $x$ thus $\partial_x h=0$. Whereas if you simply exchange $\arg\min_{y\in R^+}$ and $\partial$, it will become $\arg\min_{y\in R^+} 0$ which the result is the whole $R^+$. 
 
 Now, considering g with following assumptions:
 - minimum exists uniquely *(locally I guess?)* for all $x$, that $g\in C^2$
